@@ -1,6 +1,7 @@
 Data/
 .venv/
 __pycache__/
+.vscode/
 
 *.pdf
 *.png

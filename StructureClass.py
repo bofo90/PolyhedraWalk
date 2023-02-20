@@ -2,35 +2,41 @@ import numpy as np
 
 
 class Structure:
-    def __init__(self, folder_name, Arranged=False, Circle=False):
-        self.folder = "Data/" + folder_name
+    def __init__(self, folder_name, data_process):
+        self.folder = folder_name
 
         self.Ang, self.Len = self.readFileMat()
         self.initialState = self.getInitalState()
+        self.plot_type = data_process
 
-        if Arranged:
+        if self.plot_type == 'arranged':
             self.orderData()
+        elif self.plot_type == 'random':
+            self.shuffleData()
         else:
-            self.Ang, self.Len = self.shuffleData()
+            raise Exception("Data process not recognized. Please select 'arranged' or 'random'")
 
-        self.x, self.y = self.getXYPath(Circle)
+        self.x, self.y = self.getXYPath()
 
     def readFileMat(self):
         file_name1 = "/Angles.csv"
         file_name2 = "/Edges.csv"
 
         dataAngles = np.loadtxt(
-            self.folder + file_name1, skiprows=0, delimiter=",", dtype=np.float64
+            "Data/" + self.folder + file_name1, skiprows=0, delimiter=",", dtype=np.float64
         )
 
         dataLen = np.loadtxt(
-            self.folder + file_name2, skiprows=0, delimiter=",", dtype=np.float64
+            "Data/" + self.folder + file_name2, skiprows=0, delimiter=",", dtype=np.float64
         )
 
         return dataAngles, dataLen
 
     def getInitalState(self):
-        initialState = np.argmin(np.sum(np.abs(self.Len), axis=1))
+        if self.folder[:3] == "Bis":
+            initialState = []
+        else:
+            initialState = [np.argmin(np.sum(np.abs(self.Len), axis=1))]
         return initialState
 
     def shuffleData(self):

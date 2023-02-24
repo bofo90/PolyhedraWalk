@@ -14,18 +14,18 @@ folders_or = [file for file in os.listdir('Data/')]
 structures = [Structure(folder, TYPE_DATA) for folder in folders_or if folder[:3] != 'Bis']
 # structures = [Structure(folder, TYPE_DATA) for folder in folders_or]
 
-# plot_multi = Plot_Struct(SIZE, structures, 'line')
-# plot_multi.plot_alls()
-
 plot_lin = Plot_Struct(SIZE, structures, 'line')
-plot_lin.plot_singles()
-
+for i in range(100):
+    plot_lin.plot_singles(True, f'LineArr/{i}')
 
 # plot_circ = Plot_Struct(SIZE, structures, 'circle')
 # plot_circ.plot_alls(True, f'all_{TYPE_DATA}_bis')
 
+# plot_multi = Plot_Struct(SIZE, structures, 'line')
+# plot_multi.plot_alls()
 
-plt.show()
+
+# plt.show()
 # TO DO: 
 # line-arranged-nobis
 # line-random-all also create own dataset

@@ -5,25 +5,8 @@ import numpy as np
 class Plot_Struct:
     def __init__(self, size, structures, plot_type) -> None:
 
-        self.fig, self.axes = plt.subplots(size, size, figsize=(5.4, 5.4), facecolor='#21201F')
-        self.fig.subplots_adjust(left=0.,
-                                 bottom=0.,
-                                 right=1.,
-                                 top=1.,
-                                 wspace=0.,
-                                 hspace=0.)
         self.size = size
-        if size == 1:
-            self.axes = np.array(self.axes)
-            self.special = []
-        else:
-            self.axes = self.axes.flatten()
-            self.special = np.random.choice(size**2, int(np.ceil((size**2)*0.1)))
-
-        [ax.axis("off") for ax in self.axes]
-
         self.structures = structures
-        self.plot_structs = np.random.choice(len(structures), self.size**2, replace=len(structures) < self.size**2)
 
         self.plot_type = plot_type
         if plot_type == 'circle':
@@ -35,17 +18,39 @@ class Plot_Struct:
 
         self.getXYPaths()
 
-    def plot_alls(self, save=False, extra=''):
+    def create_fig(self):
+        self.fig, self.axes = plt.subplots(self.size, self.size, figsize=(5.4, 5.4), facecolor='#21201F')
+        self.fig.subplots_adjust(left=0.,
+                                 bottom=0.,
+                                 right=1.,
+                                 top=1.,
+                                 wspace=0.,
+                                 hspace=0.)
+        if self.size == 1:
+            self.axes = np.array(self.axes)
+            self.special = []
+        else:
+            self.axes = self.axes.flatten()
+            self.special = np.random.choice(self.size**2, int(np.ceil((self.size**2)*0.1)))
+        [ax.axis("off") for ax in self.axes]
+
+        self.plot_structs = np.random.choice(len(self.structures), self.size**2, 
+                                             replace=len(self.structures) < self.size**2)
+
+    def plot_alls(self, save=False, name=''):
+        self.create_fig()
 
         for i, struct in enumerate(self.plot_structs):
             if i in self.special:
                 self.plot_single_strcut(self.axes[i], self.structures[struct], "initial")
             self.plot_single_strcut(self.axes[i], self.structures[struct], "all")
-        
-        if save:
-            plt.savefig(f'First/multi{self.plot_type}_{extra}.png')
 
-    def plot_singles(self, save=False, extra=''):
+        if save:
+            plt.savefig(f'{name}.png')
+            plt.close(self.fig)
+
+    def plot_singles(self, save=False, name=''):
+        self.create_fig()
 
         for i, struct in enumerate(self.plot_structs):
             if i in self.special:
@@ -54,7 +59,8 @@ class Plot_Struct:
                 self.plot_single_strcut(self.axes[i], self.structures[struct], "one")
 
         if save:
-            plt.savefig(f'First/{self.plot_type}_{extra}.png')
+            plt.savefig(f'{name}.png')
+            plt.close(self.fig)
 
     def do_circles(self):
 

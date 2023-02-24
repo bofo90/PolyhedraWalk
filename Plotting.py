@@ -25,6 +25,7 @@ class Plot_Struct:
         self.structures = structures
         self.plot_structs = np.random.choice(len(structures), self.size**2, replace=len(structures) < self.size**2)
 
+        self.plot_type = plot_type
         if plot_type == 'circle':
             self.do_circles()
         elif plot_type == 'line':
@@ -34,17 +35,17 @@ class Plot_Struct:
 
         self.getXYPaths()
 
-    def plot_alls(self):
+    def plot_alls(self, save=False, extra=''):
 
         for i, struct in enumerate(self.plot_structs):
             if i in self.special:
                 self.plot_single_strcut(self.axes[i], self.structures[struct], "initial")
             self.plot_single_strcut(self.axes[i], self.structures[struct], "all")
+        
+        if save:
+            plt.savefig(f'First/multi{self.plot_type}_{extra}.png')
 
-        plt.show()
-        return
-
-    def plot_singles(self):
+    def plot_singles(self, save=False, extra=''):
 
         for i, struct in enumerate(self.plot_structs):
             if i in self.special:
@@ -52,8 +53,8 @@ class Plot_Struct:
             else:
                 self.plot_single_strcut(self.axes[i], self.structures[struct], "one")
 
-        plt.show()
-        return
+        if save:
+            plt.savefig(f'First/{self.plot_type}_{extra}.png')
 
     def do_circles(self):
 
@@ -64,8 +65,6 @@ class Plot_Struct:
                 struct.Ang[i, :] = struct.Ang[i, :] / totRot[i]
 
         return
-
-        np.random.r
 
     def plot_single_strcut(self, ax, struct, amount):
 
@@ -106,7 +105,6 @@ class Plot_Struct:
             # c = '#FFA826' yellow/orange
             # c = '#CC4229' complementary green (red-orange)
             # c = '#29cc42' green
-        pass
 
     def getXYPaths(self):
 

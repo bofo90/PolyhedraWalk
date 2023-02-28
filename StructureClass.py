@@ -2,7 +2,9 @@ import numpy as np
 
 
 class Structure:
-    def __init__(self, folder_name, data_process):
+    def __init__(self, folder_name, data_process, seed=1):
+
+        np.random.seed(seed)
         self.folder = folder_name
 
         self.AngOr, self.Len = self.readFileMat()

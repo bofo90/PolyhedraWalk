@@ -3,7 +3,9 @@ import numpy as np
 
 
 class Plot_Struct:
-    def __init__(self, size, structures, plot_type) -> None:
+    def __init__(self, size, structures, plot_type, seed=0) -> None:
+
+        np.random.seed(seed)
 
         self.size = size
         self.structures = structures
@@ -46,7 +48,7 @@ class Plot_Struct:
             self.plot_single_strcut(self.axes[i], self.structures[struct], "all")
 
         if save:
-            plt.savefig(f'{name}.png')
+            plt.savefig(f'{name}.png', dpi=300)
             plt.close(self.fig)
 
     def plot_singles(self, save=False, name=''):
@@ -59,7 +61,7 @@ class Plot_Struct:
                 self.plot_single_strcut(self.axes[i], self.structures[struct], "one")
 
         if save:
-            plt.savefig(f'{name}.png')
+            plt.savefig(f'{name}.png', dpi=300)
             plt.close(self.fig)
 
     def do_circles(self):

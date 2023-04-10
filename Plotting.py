@@ -3,12 +3,13 @@ import numpy as np
 
 
 class Plot_Struct:
-    def __init__(self, size, structures, plot_type, seed=0) -> None:
+    def __init__(self, size, structures, plot_type, scale=1.4, seed=0) -> None:
 
         np.random.seed(seed)
 
         self.size = size
         self.structures = structures
+        self.scale = scale
 
         self.plot_type = plot_type
         if plot_type == 'circle':
@@ -29,14 +30,14 @@ class Plot_Struct:
                                  wspace=0.,
                                  hspace=0.)
         if self.size == 1:
-            self.axes = np.array(self.axes)
+            self.axes = np.array([self.axes])
             self.special = []
         else:
             self.axes = self.axes.flatten()
             self.special = np.random.choice(self.size**2, int(np.ceil((self.size**2)*0.1)))
         [ax.axis("off") for ax in self.axes]
 
-        self.plot_structs = np.random.choice(len(self.structures), self.size**2, 
+        self.plot_structs = np.random.choice(len(self.structures), self.size**2,
                                              replace=len(self.structures) < self.size**2)
 
     def plot_alls(self, save=False, name=''):
@@ -88,8 +89,8 @@ class Plot_Struct:
             linewidth = 0.7
         elif amount == "all":
             iterArray = np.arange(np.size(struct.Ang, 0))
-            color = "#E3E2E1"
-            alpha = 0.2
+            color = "#21D9A4"
+            alpha = 0.1
             linewidth = 0.7
         else:
             raise Exception("Wrong type of plotting, choose between 'initial', 'one' or 'all'")
@@ -138,7 +139,6 @@ class Plot_Struct:
     def getRange(self, struct, iterArray):
 
         maxX, minX, maxY, minY = 0, 0, 0, 0
-        scale = 1.4
 
         for i in iterArray:
             maxX = max(maxX, np.max(struct.x[i, :]))
@@ -146,7 +146,7 @@ class Plot_Struct:
             maxY = max(maxY, np.max(struct.y[i, :]))
             minY = min(minY, np.min(struct.y[i, :]))
 
-        xrange = (maxX-minX)*scale/2
-        yrange = (maxY-minY)*scale/2
+        xrange = (maxX-minX)*self.scale/2
+        yrange = (maxY-minY)*self.scale/2
 
         return maxX+xrange, minX-xrange, maxY+yrange, minY-yrange

@@ -7,8 +7,8 @@ class Structure:
         np.random.seed(seed)
         self.folder = folder_name
 
-        self.AngOr, self.Len = self.readFileMat()
-        self.initialState = self.getInitalState()
+        self.AngOr, self.Len = self._readFileMat()
+        self.initialState = self._getInitalState()
         self.plot_type = data_process
 
         if self.plot_type == 'arranged':
@@ -18,7 +18,7 @@ class Structure:
         else:
             raise Exception("Data process not recognized. Please select 'arranged' or 'random'")
 
-    def readFileMat(self):
+    def _readFileMat(self):
         file_name1 = "/Angles.csv"
         file_name2 = "/Edges.csv"
 
@@ -32,14 +32,16 @@ class Structure:
 
         return dataAngles, dataLen
 
-    def getInitalState(self):
+    def _getInitalState(self):
         if self.folder[:3] == "Bis":
             initialState = []
         else:
             initialState = [np.argmin(np.sum(np.abs(self.Len), axis=1))]
         return initialState
 
-    def shuffleData(self):
+    def shuffleData(self, seed=None):
+        if seed is not None:
+            np.random.seed(seed)
         ranLen = np.arange(np.size(self.Len, 1))
         np.random.shuffle(ranLen)
         self.Len = self.Len[:, ranLen]

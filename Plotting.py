@@ -5,8 +5,6 @@ import numpy as np
 class Plot_Struct:
     def __init__(self, size, structures, plot_type, scale=1.4, seed=0) -> None:
 
-        np.random.seed(seed)
-
         self.size = size
         self.structures = structures
         self.scale = scale
@@ -21,7 +19,7 @@ class Plot_Struct:
 
         self.getXYPaths()
 
-    def create_fig(self):
+    def create_fig(self, shuffle=True):
         self.fig, self.axes = plt.subplots(self.size, self.size, figsize=(5.4, 5.4), facecolor='#21201F')
         self.fig.subplots_adjust(left=0.,
                                  bottom=0.,
@@ -37,20 +35,32 @@ class Plot_Struct:
             self.special = np.random.choice(self.size**2, int(np.ceil((self.size**2)*0.1)))
         [ax.axis("off") for ax in self.axes]
 
-        self.plot_structs = np.random.choice(len(self.structures), self.size**2,
-                                             replace=len(self.structures) < self.size**2)
+        if shuffle:
+            self.plot_structs = np.random.choice(len(self.structures), self.size**2,
+                                                 replace=len(self.structures) < self.size**2)
 
     def plot_alls(self, save=False, name=''):
         self.create_fig()
 
         for i, struct in enumerate(self.plot_structs):
-            if i in self.special:
-                self.plot_single_strcut(self.axes[i], self.structures[struct], "initial")
             self.plot_single_strcut(self.axes[i], self.structures[struct], "all")
+            # self.plot_single_strcut(self.axes[i], self.structures[struct], "all2")
 
         if save:
             plt.savefig(f'{name}.png', dpi=300)
             plt.close(self.fig)
+
+    def plot_alls_alpha_variable(self, save=False, name=''):
+        shuffle = True
+        for alpha in np.logspace(-2.3, -0.1, 45):
+            self.create_fig(shuffle=shuffle)
+            for i, struct in enumerate(self.plot_structs):
+                self.plot_single_strcut(self.axes[i], self.structures[struct], "alpha", alpha=alpha)
+
+            if save:
+                plt.savefig(f'{name}_{alpha:.4f}.png', dpi=300)
+                plt.close(self.fig)
+            shuffle = False
 
     def plot_singles(self, save=False, name=''):
         self.create_fig()
@@ -75,7 +85,7 @@ class Plot_Struct:
 
         return
 
-    def plot_single_strcut(self, ax, struct, amount):
+    def plot_single_strcut(self, ax, struct, amount, alpha=None):
 
         if amount == "initial" and len(struct.initialState) > 0:
             iterArray = struct.initialState
@@ -89,11 +99,16 @@ class Plot_Struct:
             linewidth = 0.7
         elif amount == "all":
             iterArray = np.arange(np.size(struct.Ang, 0))
-            color = "#21D9A4"
-            alpha = 0.1
+            color = "#18F076"
+            alpha = 0.03
+            linewidth = 0.7
+        elif amount == "alpha" and alpha:
+            iterArray = np.arange(np.size(struct.Ang, 0))
+            color = "#18F076"
+            alpha = alpha
             linewidth = 0.7
         else:
-            raise Exception("Wrong type of plotting, choose between 'initial', 'one' or 'all'")
+            raise Exception("Wrong type of plotting, choose between 'initial', 'one', 'all' or 'alpha'")
 
         maxX, minX, maxY, minY = self.getRange(struct, iterArray)
 
@@ -145,6 +160,11 @@ class Plot_Struct:
             minX = min(minX, np.min(struct.x[i, :]))
             maxY = max(maxY, np.max(struct.y[i, :]))
             minY = min(minY, np.min(struct.y[i, :]))
+
+        # maxX = max(maxX, -minX)
+        # minX = min(-maxX, minX)
+        # maxY = max(maxY, -minY)
+        # minY = min(-maxY, minY)
 
         xrange = (maxX-minX)*self.scale/2
         yrange = (maxY-minY)*self.scale/2

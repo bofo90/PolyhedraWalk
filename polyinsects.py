@@ -30,18 +30,13 @@ structures = [Structure(folder, TYPE_DATA) for folder in folders_or if folder.en
 #         plot_multi.plot_alls(SAVE, f'Polyinsects/test_{i}_{j}')
 
 # Plot for different alphas
-i, j = 13, 3
+i, j = 17, 0
 structure = structures[j]
 structure.shuffleData(seed=i)
 plot_multi = Plot_Struct(1, [structure], 'line', scale=0.1)
 # plot_multi.plot_alls(SAVE, f'Polyinsects/test_{i}_{j}')
-plot_multi.plot_alls_alpha_variable(SAVE, f'Polyinsects/alpha_{i}_{j}')
+plot_multi.plot_alls_alpha_variable(SAVE, f'Polyinsects/alpha_{i}_{j}/')
 
 
 if not SAVE:
     plt.show()
-
-# TO DO:
-# create aplha variable
-#   check how many images are needed for the gif (frames per second for how many seconds ~3/4)
-#   check software to create gif from images, check if instagram supports gif

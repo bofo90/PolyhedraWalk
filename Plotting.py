@@ -39,6 +39,26 @@ class Plot_Struct:
             self.plot_structs = np.random.choice(len(self.structures), self.size**2,
                                                  replace=len(self.structures) < self.size**2)
 
+    def create_fig_video(self, shuffle=True):
+        self.fig, self.axes = plt.subplots(self.size, self.size, figsize=(5.4, 9.6), facecolor='#21201F')
+        self.fig.subplots_adjust(left=0.,
+                                 bottom=0.,
+                                 right=1.,
+                                 top=1.,
+                                 wspace=0.,
+                                 hspace=0.)
+        if self.size == 1:
+            self.axes = np.array([self.axes])
+            self.special = []
+        else:
+            self.axes = self.axes.flatten()
+            self.special = np.random.choice(self.size**2, int(np.ceil((self.size**2)*0.1)))
+        [ax.axis("off") for ax in self.axes]
+
+        if shuffle:
+            self.plot_structs = np.random.choice(len(self.structures), self.size**2,
+                                                 replace=len(self.structures) < self.size**2)
+
     def plot_alls(self, save=False, name=''):
         self.create_fig()
 
@@ -52,8 +72,8 @@ class Plot_Struct:
 
     def plot_alls_alpha_variable(self, save=False, name=''):
         shuffle = True
-        for alpha in np.logspace(-2.3, -0.1, 45):
-            self.create_fig(shuffle=shuffle)
+        for alpha in np.logspace(-2.3, -0.1, 105):
+            self.create_fig_video(shuffle=shuffle)
             for i, struct in enumerate(self.plot_structs):
                 self.plot_single_strcut(self.axes[i], self.structures[struct], "alpha", alpha=alpha)
 
@@ -92,25 +112,28 @@ class Plot_Struct:
             color = "#E6A800"
             alpha = 1
             linewidth = 1
+            maxX, minX, maxY, minY = self.getRange(struct, iterArray)
         elif amount == "one" or (amount == "initial" and len(struct.initialState) == 0):
             iterArray = np.random.choice(np.size(struct.Ang, 0), 1)
             color = "#E3E2E1"
             alpha = 0.8
             linewidth = 0.7
+            maxX, minX, maxY, minY = self.getRange(struct, iterArray)
         elif amount == "all":
             iterArray = np.arange(np.size(struct.Ang, 0))
             color = "#18F076"
             alpha = 0.03
             linewidth = 0.7
+            maxX, minX, maxY, minY = self.getRange(struct, iterArray)
         elif amount == "alpha" and alpha:
             iterArray = np.arange(np.size(struct.Ang, 0))
             color = "#18F076"
             alpha = alpha
             linewidth = 0.7
+            maxX, minX, maxY, minY = self.getRangeVideo(struct, iterArray)
         else:
             raise Exception("Wrong type of plotting, choose between 'initial', 'one', 'all' or 'alpha'")
 
-        maxX, minX, maxY, minY = self.getRange(struct, iterArray)
 
         for i in iterArray:
             ax.plot(
@@ -170,3 +193,18 @@ class Plot_Struct:
         yrange = (maxY-minY)*self.scale/2
 
         return maxX+xrange, minX-xrange, maxY+yrange, minY-yrange
+    
+    def getRangeVideo(self, struct, iterArray):
+
+        maxX, minX, maxY, minY = 0, 0, 0, 0
+
+        for i in iterArray:
+            maxX = max(maxX, np.max(struct.x[i, :]))
+            minX = min(minX, np.min(struct.x[i, :]))
+            maxY = max(maxY, np.max(struct.y[i, :]))
+            minY = min(minY, np.min(struct.y[i, :]))
+
+        xrange = (maxX-minX)*self.scale/2
+        yrange = (maxY-minY)*self.scale/2
+
+        return maxX+xrange, minX-xrange, maxY*16/9+yrange, minY*16/9-yrange

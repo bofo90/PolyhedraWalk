@@ -12,9 +12,7 @@ NUM_PLOTS = 2
 
 folders_or = [file for file in os.listdir("Data/")]
 
-structures = [
-    Structure(folder, TYPE_DATA) for folder in folders_or if folder[:3] != "Bis"
-]
+structures = [Structure(folder, TYPE_DATA) for folder in folders_or if folder[:3] != "Bis"]
 
 plot_lin = Plot_Struct(SIZE, structures, "line")
 for i in range(NUM_PLOTS):

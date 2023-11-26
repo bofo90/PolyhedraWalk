@@ -14,27 +14,19 @@ class Plot_Struct:
         elif plot_type == "line":
             pass
         else:
-            raise Exception(
-                "Plot type not recognized. Please select 'line' or 'circle'"
-            )
+            raise Exception("Plot type not recognized. Please select 'line' or 'circle'")
 
         self.getXYPaths()
 
     def create_fig(self, shuffle=True):
-        self.fig, self.axes = plt.subplots(
-            self.size, self.size, figsize=(5.4, 5.4), facecolor="#21201F"
-        )
-        self.fig.subplots_adjust(
-            left=0.0, bottom=0.0, right=1.0, top=1.0, wspace=0.0, hspace=0.0
-        )
+        self.fig, self.axes = plt.subplots(self.size, self.size, figsize=(5.4, 5.4), facecolor="#21201F")
+        self.fig.subplots_adjust(left=0.0, bottom=0.0, right=1.0, top=1.0, wspace=0.0, hspace=0.0)
         if self.size == 1:
             self.axes = np.array([self.axes])
             self.special = []
         else:
             self.axes = self.axes.flatten()
-            self.special = np.random.choice(
-                self.size**2, int(np.ceil((self.size**2) * 0.1))
-            )
+            self.special = np.random.choice(self.size**2, int(np.ceil((self.size**2) * 0.1)))
         [ax.axis("off") for ax in self.axes]
 
         if shuffle:
@@ -45,20 +37,14 @@ class Plot_Struct:
             )
 
     def create_fig_video(self, shuffle=True):
-        self.fig, self.axes = plt.subplots(
-            self.size, self.size, figsize=(5.4, 9.6), facecolor="#21201F"
-        )
-        self.fig.subplots_adjust(
-            left=0.0, bottom=0.0, right=1.0, top=1.0, wspace=0.0, hspace=0.0
-        )
+        self.fig, self.axes = plt.subplots(self.size, self.size, figsize=(5.4, 9.6), facecolor="#21201F")
+        self.fig.subplots_adjust(left=0.0, bottom=0.0, right=1.0, top=1.0, wspace=0.0, hspace=0.0)
         if self.size == 1:
             self.axes = np.array([self.axes])
             self.special = []
         else:
             self.axes = self.axes.flatten()
-            self.special = np.random.choice(
-                self.size**2, int(np.ceil((self.size**2) * 0.1))
-            )
+            self.special = np.random.choice(self.size**2, int(np.ceil((self.size**2) * 0.1)))
         [ax.axis("off") for ax in self.axes]
 
         if shuffle:
@@ -84,9 +70,7 @@ class Plot_Struct:
         for alpha in np.logspace(-2.3, -0.1, 105):
             self.create_fig_video(shuffle=shuffle)
             for i, struct in enumerate(self.plot_structs):
-                self.plot_single_strcut(
-                    self.axes[i], self.structures[struct], "alpha", alpha=alpha
-                )
+                self.plot_single_strcut(self.axes[i], self.structures[struct], "alpha", alpha=alpha)
 
             if save:
                 plt.savefig(f"{name}_{alpha:.4f}.png", dpi=300)
@@ -98,9 +82,7 @@ class Plot_Struct:
 
         for i, struct in enumerate(self.plot_structs):
             if i in self.special:
-                self.plot_single_strcut(
-                    self.axes[i], self.structures[struct], "initial"
-                )
+                self.plot_single_strcut(self.axes[i], self.structures[struct], "initial")
             else:
                 self.plot_single_strcut(self.axes[i], self.structures[struct], "one")
 
@@ -143,9 +125,7 @@ class Plot_Struct:
             linewidth = 0.7
             maxX, minX, maxY, minY = self.getRangeVideo(struct, iterArray)
         else:
-            raise Exception(
-                "Wrong type of plotting, choose between 'initial', 'one', 'all' or 'alpha'"
-            )
+            raise Exception("Wrong type of plotting, choose between 'initial', 'one', 'all' or 'alpha'")
 
         for i in iterArray:
             ax.plot(
@@ -181,9 +161,7 @@ class Plot_Struct:
         a_sum = np.zeros(np.shape(a))
 
         for i in np.arange(np.size(a, 0)):
-            a_sum[i, :] = np.convolve(a[i, :], np.ones(np.shape(a[i, :])))[
-                : np.size(a, 1)
-            ]
+            a_sum[i, :] = np.convolve(a[i, :], np.ones(np.shape(a[i, :])))[: np.size(a, 1)]
 
         return a_sum
 

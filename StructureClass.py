@@ -15,9 +15,7 @@ class Structure:
         elif self.plot_type == "random":
             self.shuffleData()
         else:
-            raise Exception(
-                "Data process not recognized. Please select 'arranged' or 'random'"
-            )
+            raise Exception("Data process not recognized. Please select 'arranged' or 'random'")
 
     def _readFileMat(self):
         file_name1 = "/Angles.csv"

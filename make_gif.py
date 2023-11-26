@@ -8,10 +8,7 @@ i, j = 17, 0
 def make_gif(frame_folder):
     files = glob.glob(f"{frame_folder}/*.png")
     sorted_files = sorted(files)
-    frames = [
-        Image.open(image)
-        for image in sorted_files[:-20] + files + sorted_files[-20::-1]
-    ]
+    frames = [Image.open(image) for image in sorted_files[:-20] + files + sorted_files[-20::-1]]
     frame_one = frames[0]
     frame_one.save(
         f"Polyinsects/alpha_{i}_{j}.gif",

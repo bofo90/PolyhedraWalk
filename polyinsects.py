@@ -1,18 +1,22 @@
+import os
+
+import matplotlib.pyplot as plt
+
 from Plotting import Plot_Struct
 from StructureClass import Structure
 
-import os
-import matplotlib.pyplot as plt
-
-
 SIZE = 2
-TYPE_DATA = 'random'
+TYPE_DATA = "random"
 SAVE = True
 NUM_PLOTS = 25
 
-folders_or = [file for file in os.listdir('Data/')]
+folders_or = [file for file in os.listdir("Data/")]
 
-structures = [Structure(folder, TYPE_DATA) for folder in folders_or if folder.endswith('1000') or folder.endswith('100')]
+structures = [
+    Structure(folder, TYPE_DATA)
+    for folder in folders_or
+    if folder.endswith("1000") or folder.endswith("100")
+]
 
 
 # # Plot with 4 structures
@@ -33,9 +37,9 @@ structures = [Structure(folder, TYPE_DATA) for folder in folders_or if folder.en
 i, j = 17, 0
 structure = structures[j]
 structure.shuffleData(seed=i)
-plot_multi = Plot_Struct(1, [structure], 'line', scale=0.1)
+plot_multi = Plot_Struct(1, [structure], "line", scale=0.1)
 # plot_multi.plot_alls(SAVE, f'Polyinsects/test_{i}_{j}')
-plot_multi.plot_alls_alpha_variable(SAVE, f'Polyinsects/alpha_{i}_{j}/')
+plot_multi.plot_alls_alpha_variable(SAVE, f"Polyinsects/alpha_{i}_{j}/")
 
 
 if not SAVE:

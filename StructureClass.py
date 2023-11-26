@@ -3,7 +3,6 @@ import numpy as np
 
 class Structure:
     def __init__(self, folder_name, data_process, seed=1):
-
         np.random.seed(seed)
         self.folder = folder_name
 
@@ -11,23 +10,31 @@ class Structure:
         self.initialState = self._getInitalState()
         self.plot_type = data_process
 
-        if self.plot_type == 'arranged':
+        if self.plot_type == "arranged":
             self.orderData()
-        elif self.plot_type == 'random':
+        elif self.plot_type == "random":
             self.shuffleData()
         else:
-            raise Exception("Data process not recognized. Please select 'arranged' or 'random'")
+            raise Exception(
+                "Data process not recognized. Please select 'arranged' or 'random'"
+            )
 
     def _readFileMat(self):
         file_name1 = "/Angles.csv"
         file_name2 = "/Edges.csv"
 
         dataAngles = np.loadtxt(
-            "Data/" + self.folder + file_name1, skiprows=0, delimiter=",", dtype=np.float64
+            "Data/" + self.folder + file_name1,
+            skiprows=0,
+            delimiter=",",
+            dtype=np.float64,
         )
 
         dataLen = np.loadtxt(
-            "Data/" + self.folder + file_name2, skiprows=0, delimiter=",", dtype=np.float64
+            "Data/" + self.folder + file_name2,
+            skiprows=0,
+            delimiter=",",
+            dtype=np.float64,
         )
 
         return dataAngles, dataLen

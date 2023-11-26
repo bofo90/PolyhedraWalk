@@ -10,7 +10,9 @@ class Structure:
         self.initialState = self._getInitalState()
         self.plot_type = data_process
 
-        if self.plot_type == "arranged":
+        if self.plot_type == "original":
+            pass
+        elif self.plot_type == "arranged":
             self.orderData()
         elif self.plot_type == "random":
             self.shuffleData()

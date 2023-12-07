@@ -36,16 +36,17 @@ for struct in structures:
     axes2[0].hist(count_angles, bins=100)
     axes2[1].hist(count_lengths, bins=100)
 
-    # Conclusion:
-    # - Angles can be either zero or +- a specific value (0.75pi or 0.25pi).
-    #   This is with probability 50% zero, 25% -angle, 25% +angle.
-    #   For small angles maybe we can skip the zero angle.
-    # - Lengths are zero (no stretch).
-    #   Optionally we can get stretch from a normal distribution around zero
-    # - There around 30 unique arrays with counts below 25,
-    #   but there are 4 arrays with counts around 150
 
 plt.show()
+
+# Conclusion (bis with 100 or 1000):
+# - Angles can be either zero or +- a specific value (0.75pi or 0.25pi).
+#   This is with probability 50% zero, 25% -angle, 25% +angle.
+#   For small angles maybe we can skip the zero angle.
+# - Lengths are zero (no stretch).
+#   Optionally we can get stretch from a normal distribution around zero
+# - There around 30 unique arrays with counts below 25,
+#   but there are 4 arrays with counts around 150
 
 # ToDo:
 # - create arrays with +-angle and zero (optional, no zero)

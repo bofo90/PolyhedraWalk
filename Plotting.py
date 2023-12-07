@@ -10,7 +10,7 @@ class Plot_Struct:
 
         self.plot_type = plot_type
         if plot_type == "circle":
-            self.do_circles()
+            self._getScales()
         elif plot_type == "line":
             pass
         else:
@@ -66,12 +66,12 @@ class Plot_Struct:
             plt.savefig(f"{name}.png", dpi=300)
             plt.close(self.fig)
 
-    def plot_alls_w_initial(self, save=False, name=""):
+    def plot_alls_circle(self, save=False, name=""):
         self.create_fig(shuffle=False)
 
         for i, struct in enumerate(self.plot_structs):
+            self.scale = self.scale_array[i]
             self.plot_single_strcut(self.axes[i], self.structures[struct], "all")
-            # self.plot_single_strcut(self.axes[i], self.structures[struct], "initial")
 
         if save:
             plt.savefig(f"{name}.png", dpi=300)
@@ -117,8 +117,8 @@ class Plot_Struct:
             maxX, minX, maxY, minY = self.getRange(struct, iterArray)
         elif amount == "all":
             iterArray = np.arange(np.size(struct.Ang, 0))
-            color = "#E3E2E1"
-            alpha = 0.1
+            color = "#E6258D"  # "#E3E2E1"
+            alpha = 0.075
             linewidth = 0.7
             maxX, minX, maxY, minY = self.getRange(struct, iterArray)
         elif amount == "alpha" and alpha:
@@ -167,6 +167,9 @@ class Plot_Struct:
             a_sum[i, :] = np.convolve(a[i, :], np.ones(np.shape(a[i, :])))[: np.size(a, 1)]
 
         return a_sum
+
+    def _getScales(self):
+        self.scale_array = np.random.uniform(0, 1, self.size**2)
 
     def getRange(self, struct, iterArray):
         maxX, minX, maxY, minY = 0, 0, 0, 0

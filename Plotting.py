@@ -35,6 +35,8 @@ class Plot_Struct:
                 self.size**2,
                 replace=len(self.structures) < self.size**2,
             )
+        else:
+            self.plot_structs = np.arange(self.size**2) % len(self.structures)
 
     def create_fig_video(self, shuffle=True):
         self.fig, self.axes = plt.subplots(self.size, self.size, figsize=(5.4, 9.6), facecolor="#21201F")
@@ -59,7 +61,17 @@ class Plot_Struct:
 
         for i, struct in enumerate(self.plot_structs):
             self.plot_single_strcut(self.axes[i], self.structures[struct], "all")
-            # self.plot_single_strcut(self.axes[i], self.structures[struct], "all2")
+
+        if save:
+            plt.savefig(f"{name}.png", dpi=300)
+            plt.close(self.fig)
+
+    def plot_alls_w_initial(self, save=False, name=""):
+        self.create_fig(shuffle=False)
+
+        for i, struct in enumerate(self.plot_structs):
+            self.plot_single_strcut(self.axes[i], self.structures[struct], "all")
+            self.plot_single_strcut(self.axes[i], self.structures[struct], "initial")
 
         if save:
             plt.savefig(f"{name}.png", dpi=300)
@@ -114,8 +126,8 @@ class Plot_Struct:
             maxX, minX, maxY, minY = self.getRange(struct, iterArray)
         elif amount == "all":
             iterArray = np.arange(np.size(struct.Ang, 0))
-            color = "#18F076"
-            alpha = 0.03
+            color = "#E3E2E1"
+            alpha = 0.1
             linewidth = 0.7
             maxX, minX, maxY, minY = self.getRange(struct, iterArray)
         elif amount == "alpha" and alpha:

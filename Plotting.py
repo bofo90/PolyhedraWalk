@@ -71,7 +71,7 @@ class Plot_Struct:
 
         for i, struct in enumerate(self.plot_structs):
             self.plot_single_strcut(self.axes[i], self.structures[struct], "all")
-            self.plot_single_strcut(self.axes[i], self.structures[struct], "initial")
+            # self.plot_single_strcut(self.axes[i], self.structures[struct], "initial")
 
         if save:
             plt.savefig(f"{name}.png", dpi=300)
@@ -101,15 +101,6 @@ class Plot_Struct:
         if save:
             plt.savefig(f"{name}.png", dpi=300)
             plt.close(self.fig)
-
-    def do_circles(self):
-        for struct in self.structures:
-            struct.Ang = np.abs(struct.Ang)
-            totRot = np.sum(struct.Ang, 1) / np.random.uniform(1.9, 2.1) / np.pi
-            for i in np.arange(np.size(struct.Ang, 0)):
-                struct.Ang[i, :] = struct.Ang[i, :] / totRot[i]
-
-        return
 
     def plot_single_strcut(self, ax, struct, amount, alpha=None):
         if amount == "initial" and len(struct.initialState) > 0:

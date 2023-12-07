@@ -62,3 +62,42 @@ class Structure:
         ranAng = np.arange(np.size(self.Len, 1)) % np.size(self.AngOr, 1)
         self.Ang = self.AngOr[:, ranAng]
         self.Ang = np.sort(self.Ang, axis=1)
+
+
+class StructurePolyCircle:
+    def __init__(self, num_lines=250, length_lines=150, seed=1):
+        np.random.seed(seed)
+        self.Ang, self.Len = self._getAngLen(num_lines=num_lines, length_lines=length_lines)
+        self.initialState = self._getInitalState()
+
+        rot_ang = np.random.uniform(-2 * np.pi, 2 * np.pi)
+        self._getCircle()
+        self._rotateStructure(rot_ang=rot_ang)
+
+    def _getAngLen(self, num_lines, length_lines):
+        std_dev_stretch = 0.2
+        std_dev_angle = 0.25
+        angles1 = np.random.normal(loc=np.pi / 4, scale=std_dev_angle, size=(int(2 * num_lines / 5), length_lines))
+        angles2 = np.random.normal(loc=-np.pi / 4, scale=std_dev_angle, size=(int(2 * num_lines / 5), length_lines))
+        angles3 = np.random.normal(loc=np.pi / 4, scale=std_dev_angle, size=(int(num_lines / 5), length_lines))
+        angles = np.concatenate([angles1, angles2, angles3], axis=0)
+
+        noise = std_dev_angle
+        angles = angles + np.random.uniform(low=-noise, high=noise, size=(num_lines, length_lines))
+
+        lengths = np.random.normal(loc=0.0, scale=std_dev_stretch, size=(num_lines, length_lines))
+
+        return angles, lengths
+
+    def _getInitalState(self):
+        initialState = [np.argmin(np.sum(np.abs(self.Len), axis=1))]
+        return initialState
+
+    def _getCircle(self):
+        self.Ang = np.abs(self.Ang)
+        totRot = np.sum(self.Ang, 1) / 2 / np.pi
+        for i in np.arange(np.size(self.Ang, 0)):
+            self.Ang[i, :] = self.Ang[i, :] / totRot[i]
+
+    def _rotateStructure(self, rot_ang):
+        self.Ang[:, 0] = self.Ang[:, 0] + rot_ang

@@ -55,6 +55,8 @@ class Plot_Struct:
                 self.size**2,
                 replace=len(self.structures) < self.size**2,
             )
+        else:
+            self.plot_structs = np.arange(self.size**2) % len(self.structures)
 
     def plot_alls(self, save=False, name=""):
         self.create_fig()
@@ -76,6 +78,22 @@ class Plot_Struct:
         if save:
             plt.savefig(f"{name}.png", dpi=300)
             plt.close(self.fig)
+
+    def plot_alls_circle_onebyone(self, save=False, name=""):
+        self.create_fig_video(shuffle=False)
+        NUM_IMAGES = 1
+
+        for i, struct in enumerate(self.plot_structs):
+            for line in range(int(len(self.structures[struct].Ang) / NUM_IMAGES)):
+                self.plot_single_strcut(
+                    self.axes[i],
+                    self.structures[struct],
+                    "onebyone",
+                    iterArray=np.arange(line * NUM_IMAGES, (line + 1) * NUM_IMAGES),
+                )
+                if save:
+                    plt.savefig(f"{name}_{line:03d}.png", dpi=300)
+        plt.close(self.fig)
 
     def plot_alls_alpha_variable(self, save=False, name=""):
         shuffle = True
@@ -102,7 +120,7 @@ class Plot_Struct:
             plt.savefig(f"{name}.png", dpi=300)
             plt.close(self.fig)
 
-    def plot_single_strcut(self, ax, struct, amount, alpha=None):
+    def plot_single_strcut(self, ax, struct, amount, alpha=None, iterArray=None):
         if amount == "initial" and len(struct.initialState) > 0:
             iterArray = struct.initialState
             color = "#E6A800"
@@ -121,12 +139,17 @@ class Plot_Struct:
             alpha = 0.075
             linewidth = 0.7
             maxX, minX, maxY, minY = self.getRange(struct, iterArray)
-        elif amount == "alpha" and alpha:
+        elif amount == "alpha" and alpha is not None:
             iterArray = np.arange(np.size(struct.Ang, 0))
             color = "#18F076"
             alpha = alpha
             linewidth = 0.7
             maxX, minX, maxY, minY = self.getRangeVideo(struct, iterArray)
+        elif amount == "onebyone" and iterArray is not None:
+            color = "#E6258D"
+            alpha = 0.2
+            linewidth = 0.7
+            maxX, minX, maxY, minY = self.getFullRangeVideo(struct)
         else:
             raise Exception("Wrong type of plotting, choose between 'initial', 'one', 'all' or 'alpha'")
 
@@ -207,4 +230,22 @@ class Plot_Struct:
             minX - xrange,
             maxY * 16 / 9 + yrange,
             minY * 16 / 9 - yrange,
+        )
+
+    def getFullRangeVideo(self, struct):
+        maxX = np.max(struct.x)
+        minX = np.min(struct.x)
+        maxY = np.max(struct.y)
+        minY = np.min(struct.y)
+
+        or_yrange = maxY - minY
+
+        xrange = (maxX - minX) * self.scale / 2
+        yrange = or_yrange * self.scale / 2
+
+        return (
+            maxX + xrange,
+            minX - xrange,
+            maxY + yrange + or_yrange / 2 * 16 / 9,
+            minY - yrange - or_yrange / 2 * 16 / 9,
         )
